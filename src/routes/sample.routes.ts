@@ -14,7 +14,7 @@ const sampleService = new SampleService();
 sampleRouter.get(
   "/",
   asyncHandler(async (_req: Request, res: Response) => {
-    const samples = await sampleService.findAll();
+    const samples = await sampleService.findAllSample();
     res.status(200).json(samples);
   }),
 );
@@ -24,7 +24,7 @@ sampleRouter.get(
   validateSchema({ params: numericIdSchema }),
   asyncHandler(async (req: Request, res: Response) => {
     const id = Number(req.params.id);
-    const sample = await sampleService.findOne(id);
+    const sample = await sampleService.findSampleById(id);
     res.status(200).json(sample);
   }),
 );
@@ -34,7 +34,7 @@ sampleRouter.post(
   validateSchema({ body: createSampleBodySchema }),
   asyncHandler(async (req: Request, res: Response) => {
     const { text } = req.body;
-    const sample = await sampleService.create({ sampleText: text });
+    const sample = await sampleService.createSample({ sampleText: text });
     res.status(201).json(sample);
   }),
 );
@@ -45,7 +45,7 @@ sampleRouter.put(
   asyncHandler(async (req: Request, res: Response) => {
     const id = Number(req.params.id);
     const { text } = req.body;
-    const sample = await sampleService.update(id, { sampleText: text });
+    const sample = await sampleService.updateSampleById(id, { sampleText: text });
     res.status(200).json(sample);
   }),
 );
@@ -55,7 +55,7 @@ sampleRouter.delete(
   validateSchema({ params: numericIdSchema }),
   asyncHandler(async (req: Request, res: Response) => {
     const id = Number(req.params.id);
-    await sampleService.remove(id);
+    await sampleService.removeSampleById(id);
     res.status(204).send();
   }),
 );

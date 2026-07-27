@@ -5,22 +5,22 @@ import { SampleRepository } from "../repository/sample.repository.js";
 export class SampleService {
   private sampleRepository = new SampleRepository();
 
-  async findAll() {
+  async findAllSample() {
     return this.sampleRepository.findAll();
   }
 
-  async findOne(id: number) {
+  async findSampleById(id: number) {
     return this.sampleRepository.findOne(id);
   }
 
-  async create(payload: SampleDto) {
+  async createSample(payload: SampleDto) {
     const sample = await this.sampleRepository.create(payload);
     if (!sample) {
       throw new HttpError("Failed to create sample", 500);
     }
   }
 
-  async update(id: number, payload: SampleDto) {
+  async updateSampleById(id: number, payload: SampleDto) {
     const updated = await this.sampleRepository.update(id, payload);
     if (!updated) {
       throw new HttpError(`Sample with id '${id}' not found`, 404);
@@ -28,7 +28,7 @@ export class SampleService {
     return updated;
   }
 
-  async remove(id: number) {
+  async removeSampleById(id: number) {
     const removed = await this.sampleRepository.remove(id);
     if (!removed) {
       throw new HttpError(`Sample with id '${id}' not found`, 404);
