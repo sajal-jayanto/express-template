@@ -1,10 +1,14 @@
 import { Router, type Request, type Response } from "express";
 import { asyncHandler } from "../middlewares/asyncHandler.middleware.js";
-import { HttpError } from "../middlewares/error.middleware.js";
 import { SampleService } from "../service/sample.service.js";
+import { validateSchema } from "../middlewares/validate.middleware.js";
+import {
+  createSampleBodySchema,
+  numericIdSchema,
+  updateSampleBodySchema,
+} from "../schemas/sample.schema.js";
 
 export const sampleRouter = Router();
-
 const sampleService = new SampleService();
 
 sampleRouter.get(
@@ -17,6 +21,7 @@ sampleRouter.get(
 
 sampleRouter.get(
   "/:id",
+  validateSchema({ params: numericIdSchema }),
   asyncHandler(async (req: Request, res: Response) => {
     const id = Number(req.params.id);
     const sample = await sampleService.findOne(id);
@@ -26,11 +31,9 @@ sampleRouter.get(
 
 sampleRouter.post(
   "/",
+  validateSchema({ body: createSampleBodySchema }),
   asyncHandler(async (req: Request, res: Response) => {
     const { text } = req.body;
-    if (!text) {
-      throw new HttpError("'sampleText' is required", 400);
-    }
     const sample = await sampleService.create({ sampleText: text });
     res.status(201).json(sample);
   }),
@@ -38,12 +41,10 @@ sampleRouter.post(
 
 sampleRouter.put(
   "/:id",
+  validateSchema({ params: numericIdSchema, body: updateSampleBodySchema }),
   asyncHandler(async (req: Request, res: Response) => {
     const id = Number(req.params.id);
     const { text } = req.body;
-    if (!text) {
-      throw new HttpError("'sampleText' is required", 400);
-    }
     const sample = await sampleService.update(id, { sampleText: text });
     res.status(200).json(sample);
   }),
@@ -51,6 +52,7 @@ sampleRouter.put(
 
 sampleRouter.delete(
   "/:id",
+  validateSchema({ params: numericIdSchema }),
   asyncHandler(async (req: Request, res: Response) => {
     const id = Number(req.params.id);
     await sampleService.remove(id);
