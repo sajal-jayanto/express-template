@@ -15,7 +15,7 @@ const formatZodError = (error: ZodError) =>
     message: issue.message,
   }));
 
-export const validateSchema =
+const validateSchema =
   ({ body, params, query }: ValidationSchemas) =>
   (req: Request, _res: Response, next: NextFunction) => {
     try {
@@ -32,3 +32,5 @@ export const validateSchema =
       next(err);
     }
   };
+
+export { validateSchema };

@@ -1,7 +1,7 @@
 import { pinoHttp } from "pino-http";
 import { logger } from "../config/logger.js";
 
-export const requestLogger = pinoHttp({
+const requestLogger = pinoHttp({
   logger,
   serializers: {
     req: (req) => ({ method: req.method, url: req.url }),
@@ -13,3 +13,5 @@ export const requestLogger = pinoHttp({
     return "info";
   },
 });
+
+export { requestLogger };

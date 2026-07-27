@@ -18,7 +18,7 @@ export class HttpError extends Error {
   }
 }
 
-export function errorHandler(err: Error, req: Request, res: Response, _next: NextFunction) {
+const errorHandler = (err: Error, req: Request, res: Response, _next: NextFunction) => {
   const statusCode = err instanceof HttpError ? err.statusCode : StatusCodes.INTERNAL_SERVER_ERROR;
   const message = err instanceof HttpError ? err.message : "Internal Server Error";
   const details = err instanceof HttpError ? err.details : undefined;
@@ -33,4 +33,6 @@ export function errorHandler(err: Error, req: Request, res: Response, _next: Nex
     ...(details !== undefined && { details }),
     // ...(env.nodeEnv === "development" && { stack: err.stack }),
   });
-}
+};
+
+export { errorHandler };
