@@ -33,8 +33,17 @@ A minimal TypeScript/Express starter service with MikroORM (PostgreSQL), Pino lo
 3. Start the database:
 
    ```bash
-   docker-compose up -d
+   docker run -d \
+     --name template_db \
+     -e POSTGRES_USER=root \
+     -e POSTGRES_PASSWORD=root \
+     -e POSTGRES_DB=sample \
+     -p 5432:5432 \
+     -v $(pwd)/data/postgres:/var/lib/postgresql \
+     postgres:18-alpine
    ```
+
+   Match `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` to your `.env`'s `DB_USER` / `DB_PASSWORD` / `DB_NAME` if you changed them.
 
 4. Run migrations:
 
@@ -52,17 +61,17 @@ The server starts on `http://localhost:8000` (or the `PORT` set in `.env`).
 
 ## Scripts
 
-| Script                 | Description                              |
-| ---------------------- | ----------------------------------------- |
-| `npm run dev`          | Start the server in watch mode (tsx)      |
-| `npm run build`        | Compile TypeScript to `dist/`             |
-| `npm start`            | Run the compiled server from `dist/`      |
-| `npm run lint`         | Lint the codebase                         |
-| `npm run format`       | Format the codebase with Prettier         |
-| `npm run format:check` | Check formatting without writing changes  |
-| `npm run migrate:create` | Create a new SQL migration file         |
-| `npm run migrate:up`   | Run pending migrations                    |
-| `npm run migrate:down` | Roll back the last migration              |
+| Script                   | Description                              |
+| ------------------------ | ---------------------------------------- |
+| `npm run dev`            | Start the server in watch mode (tsx)     |
+| `npm run build`          | Compile TypeScript to `dist/`            |
+| `npm start`              | Run the compiled server from `dist/`     |
+| `npm run lint`           | Lint the codebase                        |
+| `npm run format`         | Format the codebase with Prettier        |
+| `npm run format:check`   | Check formatting without writing changes |
+| `npm run migrate:create` | Create a new SQL migration file          |
+| `npm run migrate:up`     | Run pending migrations                   |
+| `npm run migrate:down`   | Roll back the last migration             |
 
 ## Project Structure
 
