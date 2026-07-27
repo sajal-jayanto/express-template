@@ -14,12 +14,6 @@ const initOrm = async (): Promise<MikroORM> => {
 };
 
 const getOrm = () => orm;
+const getEntityManager = () => orm.em.fork();
 
-const getEM = () => orm.em.fork();
-
-// Safe to call once and reuse: every repository method resolves the current
-// request's forked EntityManager internally via RequestContext (AsyncLocalStorage),
-// as long as the RequestContext middleware is registered (see app.ts).
-const getRepository = <T extends object>(entity: EntityName<T>) => orm.em.getRepository(entity);
-
-export { initOrm, getOrm, getEM, getRepository };
+export { initOrm, getOrm, getEntityManager };

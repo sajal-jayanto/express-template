@@ -1,38 +1,55 @@
-import { StatusCodes } from "http-status-codes";
-import { SampleDto } from "../entities/sample.entity.js";
+import { SampleDto, SampleEntity } from "../entities/sample.entity.js";
+import { getEntityManager } from "../db/mikro-orm.js";
 import { HttpError } from "../middlewares/error.middleware.js";
-import { SampleRepository } from "../repository/sample.repository.js";
+import { StatusCodes } from "http-status-codes";
+import { wrap } from "@mikro-orm/core";
+
+const sampleNotFound = (_entityName: string, id: unknown) =>
+  new HttpError(`Sample with id ${id} not found`, StatusCodes.NOT_FOUND);
 
 export class SampleService {
-  private sampleRepository = new SampleRepository();
-
   async findAllSample() {
-    return this.sampleRepository.findAll();
+    const dbEntityManager = getEntityManager();
+
+    const data = await dbEntityManager.findAll(SampleEntity);
+    return data;
   }
 
   async findSampleById(id: number) {
-    return this.sampleRepository.findOne(id);
+    const dbEntityManager = getEntityManager();
+
+    const sample = await dbEntityManager.findOne(SampleEntity, { id });
+    if (!sample) {
+      throw new HttpError(`No data found with sample id ${id}`, StatusCodes.NOT_FOUND);
+    }
+    return sample;
   }
 
   async createSample(payload: SampleDto) {
-    const sample = await this.sampleRepository.create(payload);
-    if (!sample) {
-      throw new HttpError("Failed to create sample", StatusCodes.INTERNAL_SERVER_ERROR);
-    }
+    const dbEntityManager = getEntityManager();
+
+    const sample = dbEntityManager.create(SampleEntity, payload);
+    await dbEntityManager.flush();
+    return sample;
   }
 
   async updateSampleById(id: number, payload: SampleDto) {
-    const updated = await this.sampleRepository.update(id, payload);
-    if (!updated) {
-      throw new HttpError(`Sample with id '${id}' not found`, StatusCodes.NOT_FOUND);
+    const dbEntityManager = getEntityManager();
+    const sample = await dbEntityManager.findOne(SampleEntity, { id });
+
+    if (!sample) {
+      throw new HttpError(`No data found with sample id ${id}`, StatusCodes.NOT_FOUND);
     }
-    return updated;
+
+    wrap(sample).assign(payload);
+    await dbEntityManager.flush();
+    return sample;
   }
 
   async removeSampleById(id: number) {
-    const removed = await this.sampleRepository.remove(id);
-    if (!removed) {
-      throw new HttpError(`Sample with id '${id}' not found`, StatusCodes.NOT_FOUND);
-    }
+    const dbEntityManager = getEntityManager();
+
+    const sample = await this.findSampleById(id);
+    await dbEntityManager.remove(sample).flush();
   }
 }

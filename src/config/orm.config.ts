@@ -1,9 +1,9 @@
 import { defineConfig } from "@mikro-orm/postgresql";
-import { SampleSchema } from "../entities/sample.entity.js";
+import { SampleEntity } from "../entities/sample.entity.js";
 import { env } from "./env.js";
 
 const dbConfig = defineConfig({
-  entities: [SampleSchema],
+  entities: [SampleEntity],
   host: env.db.host,
   port: env.db.port,
   user: env.db.user,

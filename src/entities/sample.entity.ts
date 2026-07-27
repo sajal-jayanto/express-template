@@ -5,17 +5,17 @@ export interface SampleDto {
 }
 
 export interface Sample {
-  id: string;
+  id?: number;
   sampleText: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
-export const SampleSchema = new EntitySchema<Sample>({
+const SampleEntity = new EntitySchema<Sample>({
   name: "Sample",
   tableName: "sample",
   properties: {
-    id: { type: "string", primary: true, autoincrement: true },
+    id: { type: "integer", primary: true, autoincrement: true },
     sampleText: { type: "string", length: 100, fieldName: "sample_text" },
     createdAt: { type: "Date", fieldName: "created_at", onCreate: () => new Date() },
     updatedAt: {
@@ -26,3 +26,5 @@ export const SampleSchema = new EntitySchema<Sample>({
     },
   },
 });
+
+export { SampleEntity };
