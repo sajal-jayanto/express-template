@@ -1,10 +1,9 @@
 import { Sample, SampleDto, SampleSchema } from "../entities/sample.entity.js";
 import { getRepository } from "../db/mikro-orm.js";
-import { HttpError } from "../middlewares/error.middleware.js";
-import { lazy } from "../utils/lazy.js";
+import { lazyLoadDbEntity } from "../utils/lazy.js";
 
 export class SampleRepository {
-  private repo = lazy(() => getRepository(SampleSchema));
+  private repo = lazyLoadDbEntity(() => getRepository(SampleSchema));
 
   async findAll() {
     return this.repo().findAll();

@@ -3,10 +3,10 @@ import { env } from "./config/env.js";
 import { logger } from "./config/logger.js";
 import { initOrm } from "./db/mikro-orm.js";
 
-const startServer = async () => {
-  const app = createApp();
-  const PORT = Number(env.port) || 3000;
+const app = createApp();
+const PORT = Number(env.port) || 3000;
 
+const startServer = async () => {
   // ======================= Database Connection ==============================
   const orm = await initOrm().catch((err: unknown) => {
     logger.error(err, "❌ Failed to connect to database, aborting startup");
@@ -14,7 +14,7 @@ const startServer = async () => {
   });
   logger.info("✅ Connected to database successfully.");
 
-  // ======================= Server Start ==============================
+  // ======================= Start Server ==============================
   app.listen(PORT, () => {
     logger.info(`✅ Service listening on port ${PORT} [${env.nodeEnv}]`);
   });

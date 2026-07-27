@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
 import { ZodError, type ZodType } from "zod";
 import { HttpError } from "./error.middleware.js";
 
@@ -25,7 +26,7 @@ export const validateSchema =
     } catch (err) {
       if (err instanceof ZodError) {
         const details = formatZodError(err);
-        next(new HttpError("Validation failed", 400, { details }));
+        next(new HttpError("Validation failed", StatusCodes.BAD_REQUEST, { details }));
         return;
       }
       next(err);

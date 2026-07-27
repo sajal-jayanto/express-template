@@ -1,4 +1,4 @@
-export function lazy<T>(factory: () => T): () => T {
+const lazyLoadDbEntity = <T>(factory: () => T): (() => T) => {
   let value: T | undefined;
   let initialized = false;
   return () => {
@@ -8,4 +8,6 @@ export function lazy<T>(factory: () => T): () => T {
     }
     return value as T;
   };
-}
+};
+
+export { lazyLoadDbEntity };

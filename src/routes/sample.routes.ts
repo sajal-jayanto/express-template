@@ -1,4 +1,5 @@
 import { Router, type Request, type Response } from "express";
+import { StatusCodes } from "http-status-codes";
 import { asyncHandler } from "../middlewares/asyncHandler.middleware.js";
 import { SampleService } from "../service/sample.service.js";
 import { validateSchema } from "../middlewares/validate.middleware.js";
@@ -15,7 +16,7 @@ sampleRouter.get(
   "/",
   asyncHandler(async (_req: Request, res: Response) => {
     const samples = await sampleService.findAllSample();
-    res.status(200).json(samples);
+    res.status(StatusCodes.OK).json(samples);
   }),
 );
 
@@ -25,7 +26,7 @@ sampleRouter.get(
   asyncHandler(async (req: Request, res: Response) => {
     const id = Number(req.params.id);
     const sample = await sampleService.findSampleById(id);
-    res.status(200).json(sample);
+    res.status(StatusCodes.OK).json(sample);
   }),
 );
 
@@ -35,7 +36,7 @@ sampleRouter.post(
   asyncHandler(async (req: Request, res: Response) => {
     const { text } = req.body;
     const sample = await sampleService.createSample({ sampleText: text });
-    res.status(201).json(sample);
+    res.status(StatusCodes.CREATED).json(sample);
   }),
 );
 
@@ -46,7 +47,7 @@ sampleRouter.put(
     const id = Number(req.params.id);
     const { text } = req.body;
     const sample = await sampleService.updateSampleById(id, { sampleText: text });
-    res.status(200).json(sample);
+    res.status(StatusCodes.OK).json(sample);
   }),
 );
 
@@ -56,6 +57,6 @@ sampleRouter.delete(
   asyncHandler(async (req: Request, res: Response) => {
     const id = Number(req.params.id);
     await sampleService.removeSampleById(id);
-    res.status(204).send();
+    res.status(StatusCodes.NO_CONTENT).send();
   }),
 );
